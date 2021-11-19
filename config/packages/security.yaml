@@ -1,0 +1,50 @@
+security:
+    enable_authenticator_manager: true
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        App\Entity\User:
+            algorithm: auto
+
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            custom_authenticator: App\Security\LoginFromAuthentificatorAuthenticator
+            logout:
+                path: logout
+
+    access_control:
+        - { path: ^/backoffice, roles: ROLE_ADMIN}
+        - { path: /profile, roles: ROLE_USER }
+        - { path: /crafter, roles: ROLE_USER }
+        - { path: /leveling_job, roles: ROLE_USER }
+        - { path: /craftweapons, roles: ROLE_USER }
+        - { path: /craftarmor, roles: ROLE_USER }
+        - { path: /craftengineering, roles: ROLE_USER }
+        - { path: /craftjewel, roles: ROLE_USER }
+        - { path: /craftarcana, roles: ROLE_USER }
+        - { path: /craftcooking, roles: ROLE_USER }
+        - { path: /craftfurninshing, roles: ROLE_USER }
+        - { path: /farm, roles: ROLE_USER }
+        - { path: /farm_add, roles: ROLE_USER }
+        - { path: /farm_check, roles: ROLE_FARM }
+        - { path: /farm_loading, roles: ROLE_FARM }
+        - { path: /craft_request_check, roles: ROLE_CRAFT }
+        - { path: /craft_request_loading, roles: ROLE_CRAFT }
+
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_CRAFT
+        ROLE_FARM: ROLE_USER
+        
